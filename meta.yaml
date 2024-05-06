@@ -6,7 +6,7 @@ package:
   version: "{{ version }}"
 
 source:
-  git_url: GIT_URL
+  git_url: https://github.com/vkvam/caddie
 
 build:
   number: 0
@@ -18,7 +18,9 @@ requirements:
     - pip
   run:
     - python
-
+    - pythonocc-core==7.7.2
+  build:
+    - python
 test:
   imports:
     - caddie
