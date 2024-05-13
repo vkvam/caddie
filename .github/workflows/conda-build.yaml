@@ -34,13 +34,14 @@ jobs:
         run: |
           conda install conda-build anaconda-client
 
-      - name: Build the package
-        run: |
-          conda build .
-
-      - name: Upload package to Anaconda.org
+      - name: Build and upload the package
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
-          anaconda upload /path/to/your/package.tar.bz2
+          conda config --set anaconda_upload yes
+          conda build .
+
+#      - name: Upload package to Anaconda.org
+#        run: |
+#          anaconda upload /path/to/your/package.tar.bz2
 
