@@ -12,7 +12,7 @@ from OCC.Core.TopAbs import TopAbs_WIRE, TopAbs_FACE
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopLoc import TopLoc_Location
 from OCC.Core.TopoDS import topods_Wire, TopoDS_Compound, topods_Face, topods_Compound, TopoDS_Edge
-from ladybug_geometry.geometry2d import Point2D
+from caddie.ladybug_geometry.geometry2d import Point2D
 
 from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d.shapes import Text

@@ -3,9 +3,9 @@ from typing import Optional, Iterable, Union
 
 from OCC.Core.TopLoc import TopLoc_Location
 from OCC.Core.gp import gp_Ax2, gp_Pnt, gp_Trsf, gp_Ax3, gp_Pln, gp_Dir, gp_Vec
-from ladybug_geometry.geometry2d import Point2D, Vector2D
-from ladybug_geometry.geometry3d import Vector3D, Point3D
-from ladybug_geometry.geometry3d.plane import Plane as LPlane
+from caddie.ladybug_geometry.geometry2d import Point2D, Vector2D
+from caddie.ladybug_geometry.geometry3d import Vector3D, Point3D
+from caddie.ladybug_geometry.geometry3d.plane import Plane as LPlane
 
 from caddie.types.convert_to_gp import to_gp_Ax2, to_gp_Ax3, to_gp_Pnt, to_gp_Dir, to_gp_Vec
 

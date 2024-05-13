@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 from typing import List, Union, Tuple, Literal, Iterable
-from ladybug_geometry.geometry2d import Point2D, Arc2D, Polyline2D, LineSegment2D, Polygon2D, Vector2D
+from caddie.ladybug_geometry.geometry2d import Point2D, Arc2D, Polyline2D, LineSegment2D, Polygon2D, Vector2D
 
 from .face import WireBuilder
 

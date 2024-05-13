@@ -10,25 +10,25 @@ source:
 
 build:
   number: 0
-  script: "$PYTHON -m pip install . --no-deps --ignore-installed -vv "
+  script: "$PYTHON setup.py install"  # If you're using setup.py
 
 requirements:
   host:
     - python
     - pip
+  build:
+    - python
+    - setuptools
   run:
     - python
     - pythonocc-core==7.7.2
-  build:
-    - python
 test:
   imports:
     - caddie
 
 about:
   home: https://github.com/vkvam/caddie
-  license: GPLv3
-  license_family: GPL3
+  license: AGPLv3
   license_file: LICENSE
   summary: CAD library with python-occ backend focused on simplicity and efficiency
 

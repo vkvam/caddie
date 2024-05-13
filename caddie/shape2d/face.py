@@ -7,8 +7,8 @@ from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakePolygon, BRepBuilderAPI_M
 from OCC.Core.GC import GC_MakeArcOfCircle
 from OCC.Core.TopoDS import TopoDS_Face
 from OCC.Core.gp import gp_Pnt, gp_Circ, gp_Ax2
-from ladybug_geometry.geometry2d import Arc2D, Polyline2D, LineSegment2D, Polygon2D, Point2D
-from ladybug_geometry.geometry3d import Point3D, Vector3D
+from caddie.ladybug_geometry.geometry2d import Arc2D, Polyline2D, LineSegment2D, Polygon2D, Point2D
+from caddie.ladybug_geometry.geometry3d import Point3D, Vector3D
 
 from caddie.shape2d import Shape2DBuilder
 from caddie.types.convert_to_gp import to_gp_Pnt, to_gp_Ax2

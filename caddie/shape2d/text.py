@@ -6,7 +6,7 @@ from caddie.plane import Plane, Translation, AXIS_Z, AXIS_X, ORIGIN
 from caddie.shape2d import Shape2DBuilder
 from caddie.shape2d.shapes import Text
 from caddie.types.convert_to_internal import to_bb, shape_to_convex
-from ladybug_geometry.geometry2d import Polygon2D
+from caddie.ladybug_geometry.geometry2d import Polygon2D
 
 class TextBuilder(Shape2DBuilder):
     cache = {}

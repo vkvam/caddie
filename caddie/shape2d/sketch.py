@@ -7,8 +7,8 @@ from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakePolygon, BRepBuilderAPI_M
     BRepBuilderAPI_MakeFace
 from OCC.Core.TopoDS import TopoDS_Compound, TopoDS_Face
 from OCC.Core.gp import gp_Circ, gp_Lin
-from ladybug_geometry.geometry2d import Arc2D, Polyline2D, Polygon2D, LineSegment2D
-from ladybug_geometry.geometry3d import Point3D
+from caddie.ladybug_geometry.geometry2d import Arc2D, Polyline2D, Polygon2D, LineSegment2D
+from caddie.ladybug_geometry.geometry3d import Point3D
 
 from caddie.plane import ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d import Shape2DBuilder

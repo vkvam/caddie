@@ -19,7 +19,7 @@ from ..intersection2d import intersect_line2d, intersect_line2d_infinite, \
     does_intersection_exist_line2d, closest_point2d_on_line2d, \
     closest_end_point2d_between_line2d, closest_point2d_on_line2d_infinite
 from ._2d import Base2DIn2D
-import ladybug_geometry.boolean as pb
+from .. import boolean as pb
 
 inf = float("inf")
 

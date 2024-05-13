@@ -29,7 +29,7 @@ setup(
         "Natural Language :: English",
     ],
     packages=find_packages(),
-    install_requires=["numpy>=1.11"],
+    install_requires=["numpy>=1.26"],
     zip_safe=True,
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -10,7 +10,7 @@ from OCC.Core.TopAbs import TopAbs_EDGE, TopAbs_FACE
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopoDS import TopoDS_Shape, topods_Edge
 from OCC.Core.gp import gp_Pnt2d, gp_Pnt
-from ladybug_geometry.geometry2d import Polygon2D, Point2D, Vector2D
+from caddie.ladybug_geometry.geometry2d import Polygon2D, Point2D, Vector2D
 
 from math import atan2
 

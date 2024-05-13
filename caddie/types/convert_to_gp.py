@@ -1,5 +1,5 @@
 from OCC.Core.gp import gp_Pnt, gp_Dir, gp_Ax2, gp_Ax3, gp_Trsf, gp_Vec
-from ladybug_geometry.geometry3d import Point3D, Vector3D
+from caddie.ladybug_geometry.geometry3d import Point3D, Vector3D
 
 
 def to_gp_Pnt(p: Vector3D):

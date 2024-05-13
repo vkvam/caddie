@@ -1,7 +1,7 @@
 from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeVertex
 
 
-from ladybug_geometry.geometry2d import Point2D
+from caddie.ladybug_geometry.geometry2d import Point2D
 
 from caddie.shape2d import Shape2DBuilder
 class Shape2DVertexBuilder(Shape2DBuilder):

@@ -21,7 +21,7 @@ from ..geometry2d.ray import Ray2D
 from ..geometry2d.polygon import Polygon2D
 from ..geometry2d.mesh import Mesh2D
 
-import ladybug_geometry.boolean as pb
+from .. import boolean as pb
 
 
 class Face3D(Base2DIn3D):
