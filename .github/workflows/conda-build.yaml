@@ -38,7 +38,7 @@ jobs:
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
-          anaconda login --token $ANACONDA_TOKEN
+          anaconda login --username ${{ secrets.ANACONDA_USERNAME }} --token $ANACONDA_TOKEN
           conda config --set anaconda_upload yes
           conda build .
 
