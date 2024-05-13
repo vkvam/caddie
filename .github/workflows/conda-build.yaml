@@ -36,9 +36,8 @@ jobs:
 
       - name: Build and upload the package
         run: |
-          anaconda login --username ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
           conda config --set anaconda_upload yes
-          conda build .
+          conda build . --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
 
 #      - name: Upload package to Anaconda.org
 #        run: |
