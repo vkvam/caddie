@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ["macos-latest", "linux-latest", "mac64"]
+        os: ["macos-latest", "ubuntu-latest", "macIntel"]
         python-version: ["3.10", "3.11", "3.12"]
 
     runs-on: ${{ matrix.os }}
