@@ -28,7 +28,7 @@ jobs:
 #          environment-file: environment.yml
 #          python-version: ${{ matrix.python-version }}
 #          activate-environment: test-env
-          use-mamba: true
+#          use-mamba: true
 
       - name: Create Conda environment
         run: |
