@@ -23,27 +23,28 @@ jobs:
       - name: Install conda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          #miniconda-version: "latest"
+          miniconda-version: "latest"
           auto-update-conda: true
-          #environment-file: environment.yml
-          #python-version: ${{ matrix.python-version }}
+          environment-file: environment.yml
+          python-version: ${{ matrix.python-version }}
           #activate-environment: test-env
-          #use-mamba: true
+          use-mamba: true
 
-      - name: Create Conda environment
-        run: |
-          conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
-          conda init bash
+#      - name: Create Conda environment
+#        run: |
+#          conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
+#          conda init bash
 
       - name: Update Conda
         run: conda update -n base -c defaults conda
 
       - name: Build and upload the package
         run: |
+          conda init bash
           source /home/runner/.bashrc
-          conda activate build_env
+          conda activate test
           conda config --set anaconda_upload yes
-          conda build . --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
+          conda build . --python ${{ matrix.python-version }} --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
 #
 #      - name: Test package
 #        run: |
