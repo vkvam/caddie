@@ -36,7 +36,8 @@ jobs:
 
       - name: Build and upload the package
         run: |
-          conda init bash|grep 'modified'|grep '/\.'|awk '{print $NF}'|xargs -I{} bash -c "source {}"
+          conda init bash
+          source /Users/*/.bash_profile || source /home/*/.bashrc
           conda activate build_env
           conda config --set anaconda_upload yes
           conda build . --python ${{ matrix.python-version }} --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
