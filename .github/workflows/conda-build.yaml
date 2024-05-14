@@ -33,7 +33,7 @@ jobs:
       - name: Create Conda environment
         run: |
           conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
-          source activate build_env
+          conda activate build_env
 
       - name: Update Conda
         run: conda update -n base -c defaults conda
@@ -42,3 +42,9 @@ jobs:
         run: |
           conda config --set anaconda_upload yes
           conda build . --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
+#
+#      - name: Test package
+#        run: |
+#          conda activate build_env
+#          conda install --use-local mypackage
+#          pytest
