@@ -6,8 +6,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        python-version: ['3.10']
+        os: ["ubuntu-latest", "macos-latest"]
+        python-version: ["3.10"]
 
     runs-on: ${{ matrix.os }}
 
@@ -29,12 +29,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           activate-environment: test-env
           use-mamba: true
-
-      - name: Sh
-        shell: sh -l {0}
-        run: |
-          conda info
-          conda list          
 
       - name: Install conda-build
         run: |
