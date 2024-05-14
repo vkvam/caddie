@@ -33,7 +33,7 @@ jobs:
       - name: Create Conda environment
         run: |
           conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
-          conda init
+          conda init bash
           conda activate build_env
 
       - name: Update Conda
