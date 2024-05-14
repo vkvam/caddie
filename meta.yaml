@@ -10,7 +10,7 @@ source:
 
 build:
   number: 0
-  script: "$PYTHON setup.py install"  # If you're using setup.py
+  script: "python setup.py install"  # If you're using setup.py
 
 requirements:
   host:

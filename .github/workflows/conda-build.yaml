@@ -30,12 +30,18 @@ jobs:
           #activate-environment: test-env
           #use-mamba: true
 
+      - name: Create Conda environment
+        run: |
+          conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
+          conda init bash
+
+      - name: Update Conda
+        run: conda update -n base -c defaults conda
+
       - name: Build and upload the package
         run: |
-          conda init bash
           source /home/runner/.bashrc
-          conda activate test
-          conda install conda-build anaconda-client
+          conda activate build_env
           conda config --set anaconda_upload yes
           conda build . --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
 #
