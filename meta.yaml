@@ -21,7 +21,7 @@ requirements:
     - setuptools
   run:
     - python
-    - pythonocc-core==7
+    - pythonocc-core
 test:
   imports:
     - caddie
