@@ -14,13 +14,13 @@ build:
 
 requirements:
   host:
-    - python${{ matrix.python-version }}
+    - python
     - pip
   build:
-    - python${{ matrix.python-version }}
+    - python
     - setuptools
   run:
-    - python${{ matrix.python-version }}
+    - python
     - pythonocc-core==7.7.2
 test:
   imports:

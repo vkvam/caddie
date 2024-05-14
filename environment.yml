@@ -2,7 +2,7 @@ name: test-env
 channels:
   - conda-forge
 dependencies:
-  # - python ${{ matrix.python-version }}
+  - python=3.x
   # - pip
   - conda-build
   - anaconda-client
