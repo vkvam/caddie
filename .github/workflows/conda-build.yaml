@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ["macos-latest", "linux-latest"]
+        os: ["macos-latest", "linux-latest", "mac64"]
         python-version: ["3.10", "3.11", "3.12"]
 
     runs-on: ${{ matrix.os }}
@@ -20,19 +20,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-#      - name: Install conda
-#        uses: conda-incubator/setup-miniconda@v3
-#        with:
-#          miniconda-version: "latest"
-#          auto-update-conda: true
-#          environment-file: environment.yml
-#          python-version: ${{ matrix.python-version }}
-#          activate-environment: test-env
-#          use-mamba: true
+      - name: Install conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          use-mamba: true
 
       - name: Create Conda environment
         run: |
-          pip install conda
           conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
 
       - name: Build and upload the package
