@@ -33,7 +33,7 @@ jobs:
       - name: Create Conda environment
         run: |
           conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
-          conda init bash
+          conda init bash|grep 'modified'|grep '/\.'|awk '{print $NF}'|xargs -I{} bash -c "source {}"
 
       - name: Build and upload the package
         run: |
