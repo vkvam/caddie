@@ -33,11 +33,10 @@ jobs:
       - name: Create Conda environment
         run: |
           conda create --name build_env python=${{ matrix.python-version }} conda-build anaconda-client numpy pandas
+          conda init bash
 
       - name: Build and upload the package
         run: |
-          conda init bash
-          source /home/runner/.*
           conda activate build_env
           conda config --set anaconda_upload yes
           conda build . --python ${{ matrix.python-version }} --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
