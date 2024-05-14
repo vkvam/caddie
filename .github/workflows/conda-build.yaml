@@ -33,6 +33,7 @@ jobs:
       - name: Build and upload the package
         run: |
           conda init bash
+          source /home/runner/.bashrc
           conda activate test
           conda config --set anaconda_upload yes
           conda build . --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
