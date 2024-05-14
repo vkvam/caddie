@@ -37,7 +37,7 @@ jobs:
       - name: Build and upload the package
         run: |
           conda init bash
-          source /home/runner/.bashrc
+          source /home/runner/.*
           conda activate build_env
           conda config --set anaconda_upload yes
           conda build . --python ${{ matrix.python-version }} --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
