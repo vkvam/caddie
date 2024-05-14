@@ -39,6 +39,7 @@ jobs:
           conda init bash
           source /Users/*/.bash_profile || source /home/*/.bashrc
           conda activate build_env
+          conda config --add channels conda-forge
           conda config --set anaconda_upload yes
           conda build . --python ${{ matrix.python-version }} --user ${{ secrets.ANACONDA_USERNAME }} --token ${{ secrets.ANACONDA_TOKEN }}
 #
