@@ -7,8 +7,10 @@ from .face import WireBuilder
 
 TYPES = Union[
     Polygon2D,
+    Polyline2D,
     Arc2D,
-    WireBuilder
+    WireBuilder,
+    LineSegment2D
 ]
 
 
@@ -17,17 +19,23 @@ class MODE(Enum):
     SUB = 1
     INT = 2
 
-class Shape:
-    def __init__(self, mode: MODE, *shape: Union[TYPES, 'Sketch']) -> None:
+
+class Face:
+    """
+    Shapes must form a single Face
+    """
+    def __init__(self, mode: MODE, *shape: TYPES) -> None:
         self.mode = mode
         self.shape = shape
+
     def __hash__(self) -> int:
         return sum(s.__hash__() for s in self.shape)
 
+
 class Sketch:
-    def __init__(self, *shapes: Shape):
+    def __init__(self, *shapes: Face):
         self.shapes = shapes
-    
+
     def __hash__(self) -> int:
         return sum(s.__hash__() for s in self.shapes)
 

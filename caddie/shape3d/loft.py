@@ -1,42 +1,32 @@
 from collections import defaultdict
-import itertools
 from typing import List
 
-from OCC.Core.BRep import BRep_Builder
 from OCC.Core.BRepExtrema import BRepExtrema_DistShapeShape
 from OCC.Core.BRepOffsetAPI import BRepOffsetAPI_ThruSections
-from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Common
-from OCC.Core.GProp import GProp_GProps
-from OCC.Core.BRepGProp import brepgprop_VolumeProperties
-
 from OCC.Core.BRepTools import breptools
-
 from OCC.Core.TopAbs import TopAbs_FACE, TopAbs_WIRE
 from OCC.Core.TopExp import TopExp_Explorer
-from OCC.Core.TopLoc import TopLoc_Location
+from OCC.Core.TopoDS import TopoDS_Compound
 
-from OCC.Core.TopoDS import TopoDS_Vertex, TopoDS_Wire, TopoDS_Compound
-
-from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape3d.boolean import BooleanBuilder
 from caddie.shape3d.section import Section
-from caddie.types.convert_to_internal import to_bb
-import math
+
 
 def combine_lists(lists, index=0, path=[]):
     if not lists:
         return [[]]
-    
+
     # Generate all combinations of the remaining lists
     combinations = combine_lists(lists[1:])
-    
+
     # For each element in the first list, pair it with each combination of the remaining lists
     result = []
     for item in lists[0]:
         for combination in combinations:
             result.append([[item]] + combination)
-    
+
     return result
+
 
 def combine_lists2(other_lists):
     # TODO: Attempt to link as many faces as possible.
@@ -105,11 +95,11 @@ class LoftBuilder:
         return self
 
     def build(self) -> 'TopoDS_Shape const':
-        grouped_segments = defaultdict(lambda:([], []))
+        grouped_segments = defaultdict(lambda: ([], []))
 
         for idx, section in enumerate(self.segments):
             shape = section.build(self.precision)
-            
+
             inner_wires = []
             outer_wires = []
 
@@ -126,7 +116,7 @@ class LoftBuilder:
                     face = section.plane.moved_into(face)
 
                     outer_wire = breptools.OuterWire(face)
-                    
+
                     wire_explorer = TopExp_Explorer(face, TopAbs_WIRE)
                     while wire_explorer.More():
                         wire = wire_explorer.Value()
@@ -144,33 +134,29 @@ class LoftBuilder:
                             outer_idx += 1
                         wire_explorer.Next()
                     explorer.Next()
-            
-            for k,v in grouped_outer_wires.items():
+
+            for k, v in grouped_outer_wires.items():
                 grouped_segments[k][0].append(v)
-                
-            for k,v in grouped_inner_wires.items():
+
+            for k, v in grouped_inner_wires.items():
                 grouped_segments[k][1].append(v)
-            
 
         bool_builder = BooleanBuilder(sort_filter=lambda x: 0 if x[1] == 'fuse' else 1)
-        for k,v in grouped_segments.items():
+        for k, v in grouped_segments.items():
             outer_shape = self.__build_bb_shape(v[0])
             outer_shape_built = outer_shape.build()
-            bb = BooleanBuilder().add(outer_shape_built)
             bool_builder.add(outer_shape_built)
             inner_shape = self.__build_bb_shape(v[1], outer_shape_built) if v[1] else None
 
-            if inner_shape is not None and len(inner_shape.modifiers)>0:
+            if inner_shape is not None and len(inner_shape.modifiers) > 0:
                 bool_builder.add(inner_shape.build(), mode="cut")
-            bool_builder.add(bb.build())
         return bool_builder.build()
 
-    
     def __build_bb_shape(self, wire_segments, contained_in=None):
         wire_segment_paths = combine_lists(wire_segments)
         bb = BooleanBuilder()
         for path in wire_segment_paths:
-            shape = BRepOffsetAPI_ThruSections(self.solid, self.ruled, self.precision)            
+            shape = BRepOffsetAPI_ThruSections(self.solid, self.ruled, self.precision)
             for w in path:
                 for w2 in w:
                     shape.AddWire(w2)

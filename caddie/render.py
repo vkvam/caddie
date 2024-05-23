@@ -46,7 +46,6 @@ def shape_to_gltf(shape, linear_deflect=0.01, angular_deflect=0.125):
     # Create a temporary directory
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmp_src = os.path.join(tmpdirname, 'box.gltf')
-        # export(shape, tmp_src, linear_deflect, angular_deflect)
         write_gltf_file(shape, tmp_src, linear_deflect, angular_deflect)
         with open(tmp_src, "rb") as f2:
             dat = f2.read()

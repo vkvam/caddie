@@ -13,7 +13,7 @@ from caddie.ladybug_geometry.geometry3d import Point3D
 from caddie.plane import ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d import Shape2DBuilder
 from caddie.shape2d.face import WireBuilder
-from caddie.shape2d.shapes import Shape, Sketch, MODE, Text
+from caddie.shape2d.shapes import Face, Sketch, MODE, Text
 from caddie.shape2d.text import TextBuilder
 from caddie.types.convert_to_gp import to_gp_Pnt, to_gp_Ax2
 
@@ -38,7 +38,7 @@ def create_compound_from_shapes(shapes):
 class FaceBuilder(Shape2DBuilder):
     cache = {}
 
-    def __init__(self, sketch: Sketch, tolerance: float=TOL):
+    def __init__(self, sketch: Sketch, tolerance: float = TOL):
         super().__init__()
         self.tolerance = tolerance
         cache_key = hash(sketch)
@@ -58,7 +58,7 @@ class FaceBuilder(Shape2DBuilder):
                 if isinstance(s2, Sketch):
                     return False
                 return True
-            
+
             def __build_add(add_compound, shape):
                 print("ADD", add_compound, shape)
                 new_face = self.__make_face([shape, ]) if is_face(shape) else build(shape.shapes)
@@ -77,7 +77,7 @@ class FaceBuilder(Shape2DBuilder):
                         raise ValueError("Failed to fuse the given faces.")
                     add_compound = algo.Shape()
                 return add_compound
-            
+
             def __build_sub(add_compound, shape):
                 print("SUB", add_compound, shape)
                 new_face = self.__make_face([shape, ]) if is_face(shape) else build(shape.shapes)
@@ -93,8 +93,8 @@ class FaceBuilder(Shape2DBuilder):
                         raise ValueError("Failed to fuse the given faces.")
                     add_compound = algo.Shape()
                 return add_compound
-            
-            def build(shapes: Tuple[Shape, ...]):
+
+            def build(shapes: Tuple[Face, ...]):
                 add_compound = None
                 for s in shapes:
                     if s.mode == MODE.ADD:
@@ -103,7 +103,7 @@ class FaceBuilder(Shape2DBuilder):
                         add_compound = __build_sub(add_compound, s.shape)
                     else:
                         raise Exception("Not supported")
-                return add_compound                    
+                return add_compound
 
             self.compound = build(sketch.shapes)
             FaceBuilder.cache[cache_key] = self.compound
@@ -116,7 +116,7 @@ class FaceBuilder(Shape2DBuilder):
                 shape = self.dispatcher[type(y)](y)
                 all_built_shapes.append(shape)
             print(all_built_shapes)
-                        
+
             if isinstance(shape, TopoDS_Face) or isinstance(shape, TopoDS_Compound):
                 shapes.append(shape)
             else:
@@ -147,15 +147,15 @@ class FaceBuilder(Shape2DBuilder):
 
         return add_compound
 
-    def __gen__polyline(self, polyline: Polyline2D):
+    def __gen__polyline(self, polyline: Polyline2D, is_polygon: bool = False):
         poly = BRepBuilderAPI_MakePolygon()
         local_vertices = [to_gp_Pnt(Point3D.from_point2d(p)) for p in polyline.vertices]
         for p in local_vertices:
             poly.Add(p)
-        if not polyline.is_closed(self.tolerance):
+        if is_polygon and not polyline.is_closed(self.tolerance):
             poly.Close()  # Ensure the polygon is closed
         return poly.Wire()
-    
+
     def __gen__line(self, polyline: LineSegment2D):
         edge = BRepBuilderAPI_MakeEdge(
             to_gp_Pnt(Point3D.from_point2d(polyline.p1)),
@@ -166,14 +166,13 @@ class FaceBuilder(Shape2DBuilder):
     def __gen__polygon(self, polygon: Polygon2D):
         if not polygon.is_clockwise:
             polygon = polygon.reverse()
-        return self.__gen__polyline(Polyline2D.from_polygon(polygon))
+        return self.__gen__polyline(Polyline2D.from_polygon(polygon), True)
 
     def __gen__face(self, line: WireBuilder) -> TopoDS_Face:
         return line.build_face()
 
     def __gen__text(self, text: Text) -> TopoDS_Face:
         return TextBuilder(text=text, tolerance=self.tolerance).shape2d
-
 
     def __gen__arc(self, arc: Arc2D):
 
