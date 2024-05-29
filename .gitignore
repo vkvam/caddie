@@ -161,3 +161,6 @@ cython_debug/
 
 # MAC	
 .DS_Store
+
+# Test output
+tests/output/*

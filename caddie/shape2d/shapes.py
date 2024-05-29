@@ -22,7 +22,7 @@ class MODE(Enum):
 
 class Face:
     """
-    Shapes must form a single Face
+    Shapes must form a single Face.
     """
     def __init__(self, mode: MODE, *shape: TYPES) -> None:
         self.mode = mode

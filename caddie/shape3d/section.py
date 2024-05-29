@@ -1,6 +1,6 @@
 import dataclasses
 
-from typing import Union, List
+from typing import Union, List, Optional
 
 from caddie.ladybug_geometry.geometry2d import Point2D
 
@@ -11,28 +11,27 @@ from caddie.shape2d.text import TextBuilder
 
 
 @dataclasses.dataclass
-class WireIdentities:
+class WireGroups:
     """
-    Groups wires in a loft operation.
-    Wires with the same identity are merged into a
-    single solid.
+    Wires are assigned to groups by a single character.
+    Wires with the same group will be lofted.
 
-    The identity of a wire is determined by the letter in
-    'self.outer' or 'self.inner' with string index matching
-    the index of wires after face construction with 'Section.build()'.
+    The index of items in outer/inner should match
+    the index that shapes where added to a Sketch.
+
     """
-    outer: str
-    inner: str
+    outer: Optional[List[str]] = None
+    inner: Optional[List[str]] = None
 
 
 class Section:
-    def __init__(self, plane: Plane, sketch: Union[Point2D, Sketch, Text],
-                 identities: WireIdentities = WireIdentities(
-                     "123456789", "123456789"
+    def __init__(self, plane: Plane, sketch: Union[Sketch, Text],
+                 wire_groups: WireGroups = WireGroups(
+                     None, None
                  )):
         self.plane = plane
         self.sketch = sketch
-        self.identities = identities
+        self.wire_groups = wire_groups
 
     def build(self, tolerance):
         if isinstance(self.sketch, Sketch):

@@ -122,18 +122,29 @@ class LoftBuilder:
                         wire = wire_explorer.Value()
                         if not wire.IsEqual(outer_wire):
                             inner_wires.append(wire)
-                            ident = section.identities.inner[inner_idx]
+                            if section.wire_groups.inner is None:
+                                ident = [inner_idx]
+                            else:
+                                ident = section.wire_groups.inner[inner_idx]
                             if ident != "0":
-                                grouped_inner_wires[ident].append(wire)
+                                for ident_seg in ident:
+                                    grouped_inner_wires[ident_seg].append(wire)
                             inner_idx += 1
                         else:
                             outer_wires.append(wire)
-                            ident = section.identities.outer[outer_idx]
+                            if section.wire_groups.inner is None:
+                                ident = [outer_idx]
+                            else:
+                                ident = section.wire_groups.outer[outer_idx]
+
                             if ident != "0":
-                                grouped_outer_wires[ident].append(wire)
+                                for ident_seg in ident:
+                                    grouped_outer_wires[ident_seg].append(wire)
                             outer_idx += 1
                         wire_explorer.Next()
                     explorer.Next()
+            else:
+                raise NotImplemented
 
             for k, v in grouped_outer_wires.items():
                 grouped_segments[k][0].append(v)
@@ -143,13 +154,15 @@ class LoftBuilder:
 
         bool_builder = BooleanBuilder(sort_filter=lambda x: 0 if x[1] == 'fuse' else 1)
         for k, v in grouped_segments.items():
-            outer_shape = self.__build_bb_shape(v[0])
-            outer_shape_built = outer_shape.build()
-            bool_builder.add(outer_shape_built)
-            inner_shape = self.__build_bb_shape(v[1], outer_shape_built) if v[1] else None
-
-            if inner_shape is not None and len(inner_shape.modifiers) > 0:
-                bool_builder.add(inner_shape.build(), mode="cut")
+            outer_w, inner_w = v
+            if outer_w:
+                outer_shape = self.__build_bb_shape(outer_w)
+                outer_shape_built = outer_shape.build()
+                bool_builder.add(outer_shape_built)
+                if inner_w:
+                    inner_shape = self.__build_bb_shape(v[1], outer_shape_built) if v[1] else None
+                    if inner_shape is not None and len(inner_shape.modifiers) > 0:
+                        bool_builder.add(inner_shape.build(), mode="cut")
         return bool_builder.build()
 
     def __build_bb_shape(self, wire_segments, contained_in=None):
