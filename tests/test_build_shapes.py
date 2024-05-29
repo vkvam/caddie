@@ -17,20 +17,20 @@ from tests.shapes import triangle_w_arc_add, circle_add
 class TestBasic(unittest.TestCase):
     def test_extrude_basic(self):
         out: TopoDS_Shape = ExtrusionBuilder(
-            Section(Plane.build(), Sketch(triangle_w_arc_add))
+            Section(Plane(), Sketch(triangle_w_arc_add))
         ).build(1)
 
         write_stl_file(out, "output/extrude_basic.stl", mode="binary", angular_deflection=0.1)
 
     def test_extrude_text(self):
         out: TopoDS_Shape = ExtrusionBuilder(
-            Section(Plane.build(), Text("ABC"))
+            Section(Plane(), Text("ABC"))
         ).build(1)
 
         write_stl_file(out, "output/extrude_text.stl", mode="binary", angular_deflection=0.1)
 
     def test_bool_3d(self):
-        p0 = Plane.build()
+        p0 = Plane()
         out_add: TopoDS_Shape = ExtrusionBuilder(
             Section(p0, Sketch(circle_add))
         ).build(12)
@@ -46,7 +46,7 @@ class TestBasic(unittest.TestCase):
         write_stl_file(out, "output/bool_3d.stl", mode="binary", linear_deflection=0.1, angular_deflection=0.1)
 
     def test_loft_simple(self):
-        p0 = Plane.build()
+        p0 = Plane()
         p1 = p0.transformed(Translation(0, 0, 10), Rotation(15, AXIS_X))
         p2 = p1.transformed(Rotation(15, AXIS_X), Translation(0, 0, 10))
         section = Sketch(
@@ -82,7 +82,7 @@ class TestBasic(unittest.TestCase):
         l_2 = ["ab", "a", "cd"]  # 3 faces
         l_3 = ["d"]  # 1 face
 
-        p0 = Plane.build()
+        p0 = Plane()
         p1 = p0.transformed(Translation(0, 0, 30))
         p2 = p1.transformed(Translation(0, 0, 30), Rotation(15, AXIS_X))
         p3 = p2.transformed(Rotation(15, AXIS_X), Translation(0, 0, 30))

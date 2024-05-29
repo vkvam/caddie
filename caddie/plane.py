@@ -23,21 +23,19 @@ class Rotation:
     def __init__(self, angle: float, axis: Vector3D = AXIS_Z, pivot_point: Point3D = ORIGIN):
         self.pivot_point = pivot_point
         self.axis = axis
-        self.angle_rad = (angle/180)*math.pi
+        self.angle_rad = (angle / 180) * math.pi
 
 
 class Plane:
 
-    def __init__(self, parent: Optional['Plane'], origin: Point3D, normal: Vector3D, x_dir: Vector3D):
+    def __init__(self, parent: Optional['Plane'] = None, origin: Point3D = ORIGIN, normal: Vector3D = AXIS_Z,
+                 x_dir: Vector3D = AXIS_X):
         self.parent = parent
         self.__plane = LPlane(normal, origin, x_dir)
 
     @classmethod
-    def build(cls, parent: Optional['Plane'] = None, *transformations: Union[Translation, Rotation]):
-        if parent:
-            plane: Plane = cls(parent, parent.__plane.o, parent.__plane.n, parent.__plane.x)
-        else:
-            plane: Plane = cls(parent, Point3D(0, 0, 0), Vector3D(0, 0, 1), Vector3D(1, 0, 0))
+    def build(cls, parent: Optional['Plane'], *transformations: Union[Translation, Rotation]):
+        plane: Plane = cls(parent, parent.__plane.o, parent.__plane.n, parent.__plane.x)
 
         if transformations:
             for trans in transformations:
@@ -56,10 +54,22 @@ class Plane:
         return plane
 
     def transformed(self, *transformation: Union[Translation, Rotation]):
-        return Plane.build(
-            self,
-            *transformation
-        )
+        plane: Plane = Plane(self, self.__plane.o, self.__plane.n, self.__plane.x)
+
+        for trans in transformation:
+            if isinstance(trans, Translation):
+                move = plane.__plane.x * trans.x + plane.__plane.y * trans.y + plane.__plane.n * trans.z
+                plane.__plane = plane.__plane.move(move)
+            elif isinstance(trans, Rotation):
+                origin = Point3D(*plane.to_global(trans.pivot_point).to_array())
+                axis = plane.to_global(trans.axis) - plane.__plane.o
+                angle = trans.angle_rad
+                plane.__plane = plane.__plane.rotate(
+                    axis,
+                    angle,
+                    origin,
+                )
+        return plane
 
     def to_global(self, local: Vector3D):
         origin = self.__plane.o
@@ -125,7 +135,6 @@ class Plane:
     def moved_into(self, shape):
         return shape.Moved(TopLoc_Location(
             self.gp_Trsf(
-                Plane(None, ORIGIN, AXIS_Z, AXIS_X)
+                Plane()
             )
-
         ))
