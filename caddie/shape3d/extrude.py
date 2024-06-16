@@ -8,7 +8,7 @@ from OCC.Core.gp import gp_Pln
 
 from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d.shapes import Sketch, Text, MODE
-from caddie.shape2d.sketch import FaceBuilder
+from caddie.shape2d.sketch import SketchBuilder
 from caddie.shape2d.text import TextBuilder
 from caddie.shape3d.section import Section
 from caddie.types.convert_to_gp import to_gp_Ax3

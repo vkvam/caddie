@@ -6,7 +6,7 @@ from caddie.ladybug_geometry.geometry2d import Point2D
 
 from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d.shapes import Text
-from caddie.shape2d.sketch import Sketch, FaceBuilder
+from caddie.shape2d.sketch import Sketch, SketchBuilder
 from caddie.shape2d.text import TextBuilder
 
 
@@ -36,7 +36,7 @@ class Section:
     def build(self, tolerance):
         if isinstance(self.sketch, Sketch):
             # TODO: Cache this
-            compound = FaceBuilder(self.sketch, tolerance).compound
+            compound = SketchBuilder(self.sketch, tolerance).compound
         elif isinstance(self.sketch, Text):
             compound = TextBuilder(self.sketch, tolerance).shape2d
         else:

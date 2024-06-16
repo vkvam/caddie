@@ -1,15 +1,11 @@
 from enum import Enum
-from dataclasses import dataclass
-from typing import List, Union, Tuple, Literal, Iterable
-from caddie.ladybug_geometry.geometry2d import Point2D, Arc2D, Polyline2D, LineSegment2D, Polygon2D, Vector2D
-
-from .face import WireBuilder
+from typing import Union
+from caddie.ladybug_geometry.geometry2d import Point2D, Arc2D, Polyline2D, LineSegment2D, Polygon2D
 
 TYPES = Union[
     Polygon2D,
     Polyline2D,
     Arc2D,
-    WireBuilder,
     LineSegment2D
 ]
 

@@ -1,7 +1,6 @@
 import dataclasses
 
 from OCC.Core.Bnd import Bnd_Box
-from caddie.ladybug_geometry.geometry2d import Point2D
 from caddie.ladybug_geometry.geometry3d import Point3D
 
 

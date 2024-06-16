@@ -3,14 +3,16 @@ from OCC.Core.TopoDS import TopoDS_Shape
 from OCC.Core.Addons import text_to_brep, Font_FA_Regular, Font_FA_Bold
 
 from caddie.plane import Plane, Translation, AXIS_Z, AXIS_X, ORIGIN
-from caddie.shape2d import Shape2DBuilder
+from caddie.shape2d import Shape2DBuilder, TOL
 from caddie.shape2d.shapes import Text
 from caddie.types.convert_to_internal import to_bb, shape_to_convex
 from caddie.ladybug_geometry.geometry2d import Polygon2D
 
+
 class TextBuilder(Shape2DBuilder):
     cache = {}
-    def __init__(self, text: Text, tolerance: float) -> "TopoDS_Shape":
+
+    def __init__(self, text: Text, tolerance: float = TOL) -> "TopoDS_Shape":
         super().__init__()
         cache_key = hash(text)
         if cache_key in TextBuilder.cache:
@@ -56,16 +58,15 @@ class TextBuilder(Shape2DBuilder):
             self.shape2d = text_shape
             self.hull = shape_to_convex(text_shape, 0.001)
             TextBuilder.cache[cache_key] = self.bb, self.shape2d, self.hull
+
     @staticmethod
     def get_bounding_box(text: Text):
         return TextBuilder.cache[hash(text)][0]
-    
+
     @staticmethod
     def get_hull(text: Text) -> Polygon2D:
         return TextBuilder.cache[hash(text)][2]
-    
+
     @staticmethod
     def get_shape2d(text: Text):
         return TextBuilder.cache[hash(text)][1]
-    
-    

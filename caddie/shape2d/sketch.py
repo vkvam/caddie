@@ -2,22 +2,19 @@ import inspect
 from typing import Tuple
 
 from OCC.Core.BRep import BRep_Builder
-from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut, BRepAlgoAPI_Common
+from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut
 from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakePolygon, BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeWire, \
     BRepBuilderAPI_MakeFace
 from OCC.Core.TopoDS import TopoDS_Compound, TopoDS_Face
-from OCC.Core.gp import gp_Circ, gp_Lin
+from OCC.Core.gp import gp_Circ
 from caddie.ladybug_geometry.geometry2d import Arc2D, Polyline2D, Polygon2D, LineSegment2D
 from caddie.ladybug_geometry.geometry3d import Point3D
 
-from caddie.plane import ORIGIN, AXIS_Z, AXIS_X
-from caddie.shape2d import Shape2DBuilder
-from caddie.shape2d.face import WireBuilder
+from caddie.plane import AXIS_Z, AXIS_X
+from caddie.shape2d import Shape2DBuilder, TOL
 from caddie.shape2d.shapes import Face, Sketch, MODE, Text
 from caddie.shape2d.text import TextBuilder
 from caddie.types.convert_to_gp import to_gp_Pnt, to_gp_Ax2
-
-TOL = 1e-5
 
 
 def create_compound_from_shapes(shapes):
@@ -35,15 +32,15 @@ def create_compound_from_shapes(shapes):
     return compound
 
 
-class FaceBuilder(Shape2DBuilder):
+class SketchBuilder(Shape2DBuilder):
     cache = {}
 
     def __init__(self, sketch: Sketch, tolerance: float = TOL):
         super().__init__()
         self.tolerance = tolerance
         cache_key = hash(sketch)
-        if cache_key in FaceBuilder.cache:
-            self.compound = FaceBuilder.cache[cache_key]
+        if cache_key in SketchBuilder.cache:
+            self.compound = SketchBuilder.cache[cache_key]
         else:
             self.dispatcher = {}
 
@@ -60,9 +57,7 @@ class FaceBuilder(Shape2DBuilder):
                 return True
 
             def __build_add(add_compound, shape):
-                print("ADD", add_compound, shape)
                 new_face = self.__make_face([shape, ]) if is_face(shape) else build(shape.shapes)
-                print("NEW FACE", new_face)
                 if add_compound is None:
                     add_compound = create_compound_from_shapes([new_face])
                 else:
@@ -79,7 +74,6 @@ class FaceBuilder(Shape2DBuilder):
                 return add_compound
 
             def __build_sub(add_compound, shape):
-                print("SUB", add_compound, shape)
                 new_face = self.__make_face([shape, ]) if is_face(shape) else build(shape.shapes)
                 if add_compound is None:
                     add_compound = create_compound_from_shapes([new_face])
@@ -106,7 +100,7 @@ class FaceBuilder(Shape2DBuilder):
                 return add_compound
 
             self.compound = build(sketch.shapes)
-            FaceBuilder.cache[cache_key] = self.compound
+            SketchBuilder.cache[cache_key] = self.compound
 
     def __make_face(self, s):
         shapes = []
@@ -115,19 +109,18 @@ class FaceBuilder(Shape2DBuilder):
             for y in x:
                 shape = self.dispatcher[type(y)](y)
                 all_built_shapes.append(shape)
-            print(all_built_shapes)
 
-            if isinstance(shape, TopoDS_Face) or isinstance(shape, TopoDS_Compound):
-                shapes.append(shape)
-            else:
-                wire_builder = BRepBuilderAPI_MakeWire()
-                for s2 in all_built_shapes:
-                    wire_builder.Add(s2)
-                face_builder = BRepBuilderAPI_MakeFace(
-                    wire_builder.Wire()
-                )
-                face = face_builder.Face()
-                shapes.append(face)
+                if isinstance(shape, TopoDS_Face) or isinstance(shape, TopoDS_Compound):
+                    shapes.append(shape)
+                else:
+                    wire_builder = BRepBuilderAPI_MakeWire()
+                    for s2 in all_built_shapes:
+                        wire_builder.Add(s2)
+                    face_builder = BRepBuilderAPI_MakeFace(
+                        wire_builder.Wire()
+                    )
+                    face = face_builder.Face()
+                    shapes.append(face)
 
         add_compound = None
         for s in shapes:
@@ -167,9 +160,6 @@ class FaceBuilder(Shape2DBuilder):
         if not polygon.is_clockwise:
             polygon = polygon.reverse()
         return self.__gen__polyline(Polyline2D.from_polygon(polygon), True)
-
-    def __gen__face(self, line: WireBuilder) -> TopoDS_Face:
-        return line.build_face()
 
     def __gen__text(self, text: Text) -> TopoDS_Face:
         return TextBuilder(text=text, tolerance=self.tolerance).shape2d
