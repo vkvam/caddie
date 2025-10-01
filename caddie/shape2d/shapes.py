@@ -33,7 +33,7 @@ class Sketch:
         self.shapes = shapes
 
     def __hash__(self) -> int:
-        return hash(s.__hash__() for s in self.shapes)
+        return hash((s.__hash__() for s in self.shapes))
 
 
 class Text:
@@ -45,4 +45,4 @@ class Text:
         self.offset = offset
 
     def __hash__(self):
-        return hash(self.txt, self.size, self.h_align, self.v_align, self.offset)
+        return hash((self.txt, self.size, self.h_align, self.v_align, self.offset))
