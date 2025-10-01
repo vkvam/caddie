@@ -25,7 +25,7 @@ class Face:
         self.shape = shape
 
     def __hash__(self) -> int:
-        return sum(s.__hash__() for s in self.shape)
+        return hash((s.__hash__() for s in self.shape))
 
 
 class Sketch:
@@ -33,7 +33,7 @@ class Sketch:
         self.shapes = shapes
 
     def __hash__(self) -> int:
-        return sum(s.__hash__() for s in self.shapes)
+        return hash(s.__hash__() for s in self.shapes)
 
 
 class Text:
@@ -43,3 +43,6 @@ class Text:
         self.h_align = h_align
         self.v_align = v_align
         self.offset = offset
+
+    def __hash__(self):
+        return hash(self.txt, self.size, self.h_align, self.v_align, self.offset)
