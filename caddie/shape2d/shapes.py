@@ -25,7 +25,7 @@ class Face:
         self.shape = shape
 
     def __hash__(self) -> int:
-        return hash((s.__hash__() for s in self.shape))
+        return hash(tuple(s.__hash__() for s in self.shape))
 
 
 class Sketch:
@@ -33,7 +33,7 @@ class Sketch:
         self.shapes = shapes
 
     def __hash__(self) -> int:
-        return hash((s.__hash__() for s in self.shapes))
+        return hash(tuple(s.__hash__() for s in self.shapes))
 
 
 class Text:
