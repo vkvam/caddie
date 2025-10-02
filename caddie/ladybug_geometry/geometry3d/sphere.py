@@ -187,7 +187,7 @@ class Sphere(object):
     def to_dict(self):
         """Get Sphere as a dictionary."""
         return {'type': 'Sphere',
-                'center': self.center.to_array(),
+                'center': self.center.as_tuple(),
                 'radius': self.radius}
 
     def __copy__(self):

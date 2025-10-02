@@ -221,8 +221,8 @@ class Cylinder(object):
         """Get Cylinder as a dictionary."""
         return {
             'type': 'Cylinder',
-            'center': self.center.to_array(),
-            'axis': self.axis.to_array(),
+            'center': self.center.as_tuple(),
+            'axis': self.axis.as_tuple(),
             'radius': self.radius
         }
 

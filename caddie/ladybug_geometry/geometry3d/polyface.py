@@ -837,7 +837,7 @@ class Polyface3D(Base2DIn3D):
                 it is de-serialized. Default True.
         """
         base = {'type': 'Polyface3D',
-                'vertices': [v.to_array() for v in self.vertices],
+                'vertices': [v.as_tuple() for v in self.vertices],
                 'face_indices': self.face_indices}
         if include_edge_information:
             base['edge_information'] = self.edge_information

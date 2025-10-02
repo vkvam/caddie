@@ -26,11 +26,11 @@ class Vector3D(object):
     """
     __slots__ = ('_x', '_y', '_z')
 
-    def __init__(self, x=0, y=0, z=0):
+    def __init__(self, x: float=0.0, y: float=0.0, z: float=0.0):
         """Initialize 3D Vector."""
-        self._x = self._cast_to_float(x)
-        self._y = self._cast_to_float(y)
-        self._z = self._cast_to_float(z)
+        self._x = x
+        self._y = y
+        self._z = z
 
     @classmethod
     def from_dict(cls, data):
@@ -221,18 +221,12 @@ class Vector3D(object):
                 'y': self.y,
                 'z': self.z}
 
-    def to_array(self):
+    def as_tuple(self):
         """Get Vector3D/Point3D as a tuple of three numbers"""
-        return (self.x, self.y, self.z)
+        return self.x, self.y, self.z
 
-    def _cast_to_float(self, value):
-        """Ensure that an input coordinate value is a float."""
-        try:
-            number = float(value)
-        except Exception:
-            raise TypeError(
-                'Coordinates must be numbers. Got {}: {}.'.format(type(value), value))
-        return number
+    def copy(self) -> 'Vector3D':
+        return Vector3D(self.x, self.y, self.z)
 
     @staticmethod
     def _reflect(vec, normal):
@@ -512,6 +506,9 @@ class Point3D(Vector3D):
                 'x': self.x,
                 'y': self.y,
                 'z': self.z}
+
+    def copy(self) -> 'Point3D':
+        return Point3D(self.x, self.y, self.z)
 
     def __add__(self, other):
         # Point + Vector -> Point

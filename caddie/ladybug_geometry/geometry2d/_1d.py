@@ -148,8 +148,8 @@ class Base1DIn2D(object):
 
     def to_dict(self):
         """Get LineSegment2D/Ray2D as a dictionary."""
-        return {'p': self.p.to_array(),
-                'v': self.v.to_array()}
+        return {'p': self.p.as_tuple(),
+                'v': self.v.as_tuple()}
 
     def __copy__(self):
         return self.__class__(self.p, self.v)

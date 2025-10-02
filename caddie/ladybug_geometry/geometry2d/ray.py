@@ -81,16 +81,16 @@ class Ray2D(Base1DIn2D):
         base['type'] = 'Ray2D'
         return base
 
-    def to_array(self):
+    def as_tuple(self):
         """A nested array representing the start point and vector."""
-        return (self.p.to_array(), self.v.to_array())
+        return self.p.as_tuple(), self.v.as_tuple()
 
     def _u_in(self, u):
         return u >= 0.0
 
     def __key(self):
         """A tuple based on the object properties, useful for hashing."""
-        return (hash(self.p), hash(self.v))
+        return hash(self.p), hash(self.v)
 
     def __hash__(self):
         return hash(self.__key())

@@ -4,6 +4,7 @@ from __future__ import division
 
 import math
 import operator
+from typing import Tuple
 
 
 class Vector2D(object):
@@ -22,10 +23,10 @@ class Vector2D(object):
     """
     __slots__ = ('_x', '_y')
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x: float=0.0, y:float=0.0):
         """Initialize 2D Vector."""
-        self._x = self._cast_to_float(x)
-        self._y = self._cast_to_float(y)
+        self._x = x
+        self._y = y
 
     @classmethod
     def from_dict(cls, data):
@@ -53,9 +54,9 @@ class Vector2D(object):
         """
         return cls(array[0], array[1])
 
-    def to_array(self):
+    def as_tuple(self) -> Tuple[float, float]:
         """Get Vector2D/Point2D as a tuple of two numbers"""
-        return (self.x, self.y)
+        return self.x, self.y
 
     @property
     def x(self):
@@ -210,15 +211,6 @@ class Vector2D(object):
         if (avg_x, avg_y) == (0, 0):  # just return the normal mean
             return sum(angles) / len(angles)
         return math.atan2(avg_y, avg_x)
-
-    def _cast_to_float(self, value):
-        """Ensure that an input coordinate value is a float."""
-        try:
-            number = float(value)
-        except Exception:
-            raise TypeError(
-                'Coordinates must be numbers. Got {}: {}.'.format(type(value), value))
-        return number
 
     @staticmethod
     def _rotate(vec, angle):

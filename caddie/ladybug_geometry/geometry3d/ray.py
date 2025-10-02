@@ -117,7 +117,7 @@ class Ray3D(Base1DIn3D):
 
     def to_array(self):
         """A nested array representing the start point and vector."""
-        return (self.p.to_array(), self.v.to_array())
+        return (self.p.as_tuple(), self.v.as_tuple())
 
     def _u_in(self, u):
         return u >= 0.0

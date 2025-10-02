@@ -557,7 +557,7 @@ class Polygon2D(Base2DIn2D):
             return self.center
 
         # get an array representation of the polygon and set up the priority queue
-        _polygon = tuple(pt.to_array() for pt in self.vertices)
+        _polygon = tuple(pt.as_tuple() for pt in self.vertices)
         cell_queue = PriorityQueue()
 
         # cover polygon with initial cells
@@ -1174,11 +1174,11 @@ class Polygon2D(Base2DIn2D):
     def to_dict(self):
         """Get Polygon2D as a dictionary."""
         return {'type': 'Polygon2D',
-                'vertices': [pt.to_array() for pt in self.vertices]}
+                'vertices': [pt.as_tuple() for pt in self.vertices]}
 
-    def to_array(self):
+    def as_tuple(self):
         """Get a list of lists where each sub-list represents a Point2D vertex."""
-        return tuple(pt.to_array() for pt in self.vertices)
+        return tuple(pt.as_tuple() for pt in self.vertices)
 
     def _to_bool_poly(self):
         """Translate the Polygon2D to a BooleanPolygon."""

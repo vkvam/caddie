@@ -197,8 +197,8 @@ class Cone(object):
         """Get Cone as a dictionary."""
         return {
             'type': 'Cone',
-            'vertex': self.vertex.to_array(),
-            'axis': self.axis.to_array(),
+            'vertex': self.vertex.as_tuple(),
+            'axis': self.axis.as_tuple(),
             'angle': self.angle
         }
 

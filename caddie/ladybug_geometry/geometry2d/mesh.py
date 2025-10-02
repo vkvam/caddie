@@ -474,7 +474,7 @@ class Mesh2D(MeshBase):
         if self.colors is not None:
             colors = [col.to_dict() for col in self.colors]
         return {'type': 'Mesh2D',
-                'vertices': [pt.to_array() for pt in self.vertices],
+                'vertices': [pt.as_tuple() for pt in self.vertices],
                 'faces': self.faces, 'colors': colors}
 
     @staticmethod

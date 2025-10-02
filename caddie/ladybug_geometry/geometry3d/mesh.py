@@ -450,7 +450,7 @@ class Mesh3D(MeshBase):
     def to_dict(self):
         """Get Mesh3D as a dictionary."""
         base = {'type': 'Mesh3D',
-                'vertices': [pt.to_array() for pt in self.vertices],
+                'vertices': [pt.as_tuple() for pt in self.vertices],
                 'faces': self.faces}
         if self.colors is not None:
             base['colors'] = [col.to_dict() for col in self.colors]

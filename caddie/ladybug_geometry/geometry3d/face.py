@@ -2482,14 +2482,14 @@ class Face3D(Base2DIn3D):
         """
         base = {'type': 'Face3D'}
         if not enforce_upper_left:
-            base['boundary'] = [pt.to_array() for pt in self.boundary]
+            base['boundary'] = [pt.as_tuple() for pt in self.boundary]
         else:
-            base['boundary'] = [pt.to_array() for pt in
+            base['boundary'] = [pt.as_tuple() for pt in
                                 self._upper_left_counter_clockwise_boundary()]
         if include_plane:
             base['plane'] = self.plane.to_dict()
         if self.has_holes:
-            base['holes'] = [[pt.to_array() for pt in hole]
+            base['holes'] = [[pt.as_tuple() for pt in hole]
                              for hole in self.holes]
         return base
 

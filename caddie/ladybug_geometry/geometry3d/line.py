@@ -264,7 +264,7 @@ class LineSegment3D(Base1DIn3D):
 
     def to_array(self):
         """ A nested list representing the two line endpoint coordinates."""
-        return (self.p1.to_array(), self.p2.to_array())
+        return (self.p1.as_tuple(), self.p2.as_tuple())
 
     def _u_in(self, u):
         return u >= 0.0 and u <= 1.0

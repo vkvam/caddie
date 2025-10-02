@@ -33,35 +33,15 @@ class Plane:
         self.parent = parent
         self.__plane = LPlane(normal, origin, x_dir)
 
-    @classmethod
-    def build(cls, parent: Optional['Plane'], *transformations: Union[Translation, Rotation]):
-        plane: Plane = cls(parent, parent.__plane.o, parent.__plane.n, parent.__plane.x)
-
-        if transformations:
-            for trans in transformations:
-                if isinstance(trans, Translation):
-                    move = plane.__plane.x * trans.x + plane.__plane.y * trans.y + plane.__plane.n * trans.z
-                    plane.__plane = plane.__plane.move(move)
-                elif isinstance(trans, Rotation):
-                    origin = Point3D(*plane.to_global(trans.pivot_point).to_array())
-                    axis = plane.to_global(trans.axis) - plane.__plane.o
-                    angle = trans.angle_rad
-                    plane.__plane = plane.__plane.rotate(
-                        axis,
-                        angle,
-                        origin,
-                    )
-        return plane
-
     def transformed(self, *transformation: Union[Translation, Rotation]):
-        plane: Plane = Plane(self, self.__plane.o, self.__plane.n, self.__plane.x)
+        plane: Plane = self.copy()
 
         for trans in transformation:
             if isinstance(trans, Translation):
                 move = plane.__plane.x * trans.x + plane.__plane.y * trans.y + plane.__plane.n * trans.z
                 plane.__plane = plane.__plane.move(move)
             elif isinstance(trans, Rotation):
-                origin = Point3D(*plane.to_global(trans.pivot_point).to_array())
+                origin = Point3D(*plane.to_global(trans.pivot_point).as_tuple())
                 axis = plane.to_global(trans.axis) - plane.__plane.o
                 angle = trans.angle_rad
                 plane.__plane = plane.__plane.rotate(
@@ -131,6 +111,9 @@ class Plane:
     @property
     def y(self) -> Vector3D:
         return self.__plane.y
+
+    def copy(self) -> 'Plane':
+        return Plane(self, self.__plane.o.copy(), self.__plane.n.copy(), self.__plane.x.copy())
 
     def moved_into(self, shape):
         return shape.Moved(TopLoc_Location(

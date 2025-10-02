@@ -263,14 +263,14 @@ class Polyline3D(Base2DIn3D):
     def to_dict(self):
         """Get Polyline3D as a dictionary."""
         base = {'type': 'Polyline3D',
-                'vertices': [pt.to_array() for pt in self.vertices]}
+                'vertices': [pt.as_tuple() for pt in self.vertices]}
         if self.interpolated:
             base['interpolated'] = self.interpolated
         return base
 
     def to_array(self):
         """Get a list of lists where each sub-list represents a Point3D vertex."""
-        return tuple(pt.to_array() for pt in self.vertices)
+        return tuple(pt.as_tuple() for pt in self.vertices)
 
     def to_polyline2d(self):
         """Get a Polyline2D in the XY plane derived from this 3D polyline."""

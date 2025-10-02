@@ -277,12 +277,12 @@ class LineSegment2D(Base1DIn2D):
         base['type'] = 'LineSegment2D'
         return base
 
-    def to_array(self):
+    def as_tuple(self):
         """ A nested list representing the two line endpoint coordinates."""
-        return (self.p1.to_array(), self.p2.to_array())
+        return self.p1.as_tuple(), self.p2.as_tuple()
 
     def _u_in(self, u):
-        return u >= 0.0 and u <= 1.0
+        return 0.0 <= u <= 1.0
 
     def __abs__(self):
         return abs(self.v)
@@ -292,7 +292,7 @@ class LineSegment2D(Base1DIn2D):
 
     def __key(self):
         """A tuple based on the object properties, useful for hashing."""
-        return (hash(self.p), hash(self.v))
+        return hash(self.p), hash(self.v)
 
     def __hash__(self):
         return hash(self.__key())

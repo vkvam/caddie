@@ -434,9 +434,9 @@ class Plane(object):
     def to_dict(self):
         """Get Plane as a dictionary."""
         return {'type': 'Plane',
-                'n': self.n.to_array(),
-                'o': self.o.to_array(),
-                'x': self.x.to_array()}
+                'n': self.n.as_tuple(),
+                'o': self.o.as_tuple(),
+                'x': self.x.as_tuple()}
 
     def __copy__(self):
         return Plane(self.n, self.o, self.x)

@@ -63,7 +63,7 @@ class BoundingBox:
 
     def __hash__(self):
         return hash(
-            self.__p_min.to_array() + self.__p_max.to_array()
+            self.__p_min.as_tuple() + self.__p_max.as_tuple()
         )
 
     def __repr__(self):

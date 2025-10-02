@@ -405,7 +405,7 @@ class Arc2D(object):
 
     def to_dict(self):
         """Get Arc2D as a dictionary."""
-        return {'type': 'Arc2D', 'c': self.c.to_array(),
+        return {'type': 'Arc2D', 'c': self.c.as_tuple(),
                 'r': self.r, 'a1': self.a1, 'a2': self.a2}
 
     def duplicate(self):
