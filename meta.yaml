@@ -25,11 +25,14 @@ requirements:
 test:
   requires:
     - pytest
+    - pythonocc-core ==7.7.2
   imports:
     - caddie
     - OCC.Core.TopoDS
+  source_files:
+    - tests
   commands:
-    - pytest tests -q --disable-warnings --maxfail=1
+    - pytest -q --disable-warnings --maxfail=1
 
 about:
   home: https://github.com/vkvam/caddie
