@@ -17,7 +17,7 @@ class BooleanBuilder:
         self.modifiers.append((shape, mode))
         return self
 
-    def build(self) -> Shape3D:
+    def to_shape(self) -> Shape3D:
         
         sorted_mods = sorted(
             self.modifiers,

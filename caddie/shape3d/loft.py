@@ -7,6 +7,7 @@ from OCC.Core.TopAbs import TopAbs_FACE, TopAbs_WIRE
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopoDS import TopoDS_Compound
 
+from caddie.shape2d import Shape2D
 from caddie.shape3d import Shape3D
 from caddie.shape3d.boolean import BooleanBuilder
 from caddie.shape3d.section import Section
@@ -40,11 +41,11 @@ class LoftBuilder:
         self.segments.extend(segment)
         return self
 
-    def build(self) -> Shape3D:
+    def to_shape(self) -> Shape3D:
         grouped_segments = defaultdict(lambda: ([], []))
 
         for idx, section in enumerate(self.segments):
-            shape = section.build(self.precision)
+            shape_2d: Shape2D = section.to_shape(self.precision)
 
             inner_wires = []
             outer_wires = []
@@ -54,8 +55,8 @@ class LoftBuilder:
             outer_idx = 0
             inner_idx = 0
 
-            if isinstance(shape, TopoDS_Compound):
-                explorer = TopExp_Explorer(shape, TopAbs_FACE)
+            if isinstance(shape_2d.compound, TopoDS_Compound):
+                explorer = TopExp_Explorer(shape_2d.compound, TopAbs_FACE)
                 while explorer.More():
 
                     face = explorer.Value()
@@ -103,13 +104,13 @@ class LoftBuilder:
             outer_w, inner_w = v
             if outer_w:
                 outer_shape = self.__build_bb_shape(outer_w)
-                outer_shape_built = outer_shape.build()
+                outer_shape_built = outer_shape.to_shape()
                 bool_builder.add(outer_shape_built)
                 if inner_w:
                     inner_shape = self.__build_bb_shape(v[1]) if v[1] else None
                     if inner_shape is not None and len(inner_shape.modifiers) > 0:
-                        bool_builder.add(inner_shape.build(), mode="cut")
-        return bool_builder.build()
+                        bool_builder.add(inner_shape.to_shape(), mode="cut")
+        return bool_builder.to_shape()
 
     def __build_bb_shape(self, wire_segments):
         wire_segment_paths = combine_lists(wire_segments)

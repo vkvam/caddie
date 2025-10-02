@@ -11,7 +11,7 @@ from caddie.ladybug_geometry.geometry2d import Arc2D, Polyline2D, Polygon2D, Lin
 from caddie.ladybug_geometry.geometry3d import Point3D
 
 from caddie.plane import AXIS_Z, AXIS_X
-from caddie.shape2d import Shape2DBuilder, TOL
+from caddie.shape2d import Shape2DBuilder, TOL, Shape2D
 from caddie.shape2d.shapes import Face, Sketch, MODE, Text
 from caddie.shape2d.text import TextBuilder
 from caddie.types.convert_to_gp import to_gp_Pnt, to_gp_Ax2
@@ -40,7 +40,7 @@ class SketchBuilder(Shape2DBuilder):
         self.tolerance = tolerance
         cache_key = hash(sketch)
         if cache_key in SketchBuilder.cache:
-            self.compound = SketchBuilder.cache[cache_key]
+            self.shape2d = SketchBuilder.cache[cache_key]
         else:
             self.dispatcher = {}
 
@@ -99,8 +99,8 @@ class SketchBuilder(Shape2DBuilder):
                         raise Exception("Not supported")
                 return add_compound
 
-            self.compound = build(sketch.shapes)
-            SketchBuilder.cache[cache_key] = self.compound
+            self.shape2d = Shape2D(build(sketch.shapes))
+            SketchBuilder.cache[cache_key] = self.shape2d
 
     def __make_face(self, s):
         shapes = []

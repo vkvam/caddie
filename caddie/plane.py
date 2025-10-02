@@ -2,6 +2,7 @@ import math
 from typing import Optional, Iterable, Union
 
 from OCC.Core.TopLoc import TopLoc_Location
+from OCC.Core.TopoDS import TopoDS_Compound, TopoDS_Shape
 from OCC.Core.gp import gp_Ax2, gp_Pnt, gp_Trsf, gp_Ax3, gp_Pln, gp_Dir, gp_Vec
 from caddie.ladybug_geometry.geometry2d import Point2D, Vector2D
 from caddie.ladybug_geometry.geometry3d import Vector3D, Point3D
@@ -115,7 +116,10 @@ class Plane:
     def copy(self) -> 'Plane':
         return Plane(self, self.__plane.o.copy(), self.__plane.n.copy(), self.__plane.x.copy())
 
-    def moved_into(self, shape):
+    def moved_into(self, shape) -> Union[
+        TopoDS_Compound,
+        TopoDS_Shape
+    ]:
         return shape.Moved(TopLoc_Location(
             self.gp_Trsf(
                 Plane()

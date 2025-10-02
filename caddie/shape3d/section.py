@@ -5,6 +5,7 @@ from typing import Union, List, Optional
 from caddie.ladybug_geometry.geometry2d import Point2D
 
 from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
+from caddie.shape2d import Shape2D
 from caddie.shape2d.shapes import Text
 from caddie.shape2d.sketch import Sketch, SketchBuilder
 from caddie.shape2d.text import TextBuilder
@@ -33,13 +34,10 @@ class Section:
         self.sketch = sketch
         self.wire_groups = wire_groups
 
-    def build(self, tolerance):
+    def to_shape(self, tolerance: float) -> Shape2D:
         if isinstance(self.sketch, Sketch):
-            # TODO: Cache this
-            compound = SketchBuilder(self.sketch, tolerance).compound
+            return SketchBuilder(self.sketch, tolerance).shape2d
         elif isinstance(self.sketch, Text):
-            compound = TextBuilder(self.sketch, tolerance).shape2d
+            return TextBuilder(self.sketch, tolerance).shape2d
         else:
-            compound = self.sketch
-
-        return compound
+            raise NotImplementedError(f"{type(self.sketch)} not supported")

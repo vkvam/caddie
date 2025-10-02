@@ -32,7 +32,7 @@ class TestBasic(unittest.TestCase):
     def test_extrude_basic(self):
         out: Shape3D = ExtrusionBuilder(
             Section(Plane(), Sketch(triangle_w_arc_add))
-        ).build(1)
+        ).to_shape(1)
         path = f"{self.OUTPUT_PATH}/extrude_basic.stl"
         write_stl_file(out.occ_shape, path, mode="binary", angular_deflection=0.1)
         self.assertFileMinSize(path, 1000)  # set threshold you consider “real”
@@ -40,7 +40,7 @@ class TestBasic(unittest.TestCase):
     def test_extrude_text(self):
         out: Shape3D = ExtrusionBuilder(
             Section(Plane(), Text("ABC"))
-        ).build(1)
+        ).to_shape(1)
         path = f"{self.OUTPUT_PATH}/extrude_text.stl"
         write_stl_file(out.occ_shape, path, mode="binary", angular_deflection=0.1)
         self.assertFileMinSize(path, 1000)  # set threshold you consider “real”
@@ -49,15 +49,15 @@ class TestBasic(unittest.TestCase):
         p0 = Plane()
         out_add: Shape3D = ExtrusionBuilder(
             Section(p0, Sketch(circle_add))
-        ).build(12)
+        ).to_shape(12)
 
         out_cut: Shape3D = ExtrusionBuilder(
             Section(p0, Sketch(triangle_w_arc_add))
-        ).build(12)
+        ).to_shape(12)
 
         out = BooleanBuilder().add(
             out_add
-        ).add(out_cut, "cut").build()
+        ).add(out_cut, "cut").to_shape()
 
         path = f"{self.OUTPUT_PATH}/bool_3d.stl"
         write_stl_file(out.occ_shape, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
@@ -90,7 +90,7 @@ class TestBasic(unittest.TestCase):
                 p2,
                 section
             )
-        ).build()
+        ).to_shape()
         path = f"{self.OUTPUT_PATH}/loft_simple.stl"
         write_stl_file(out.occ_shape, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
 
@@ -222,7 +222,7 @@ class TestBasic(unittest.TestCase):
                     l_3, l_3
                 )
             )
-        ).build()
+        ).to_shape()
         path = f"{self.OUTPUT_PATH}/loft_complex.stl"
         write_stl_file(lb.occ_shape, path, mode="binary", linear_deflection=0.5, angular_deflection=0.5)
         self.assertFileMinSize(path, 1000)
