@@ -1,5 +1,5 @@
 {% set name = "caddie" %}
-{% set version = "0.0.6" %}
+{% set version = "0.0.7" %}
 
 package:
   name: "{{ name|lower }}"
@@ -23,8 +23,13 @@ requirements:
     - python
     - pythonocc-core ==7.7.2
 test:
+  requires:
+    - pytest
   imports:
     - caddie
+    - OCC.Core.TopoDS
+  commands:
+    - pytest tests -q --disable-warnings --maxfail=1
 
 about:
   home: https://github.com/vkvam/caddie

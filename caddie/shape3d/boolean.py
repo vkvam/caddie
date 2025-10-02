@@ -1,9 +1,9 @@
-import enum
-from typing import List, Optional, Union, Literal, Tuple
+from typing import List, Optional, Literal, Tuple
 
-from OCC.Core.BRepAlgoAPI import (BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse, BRepAlgoAPI_Section)
+from OCC.Core.BRepAlgoAPI import (BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse)
 from OCC.Core.TopoDS import TopoDS_Shape
-from caddie.plane import Plane
+
+from caddie.shape3d import Shape
 
 OPS = Literal["cut", "fuse"]
 
@@ -12,11 +12,11 @@ class BooleanBuilder:
     def __init__(self, sort_filter: Optional[callable] = None):
         self.modifiers: List[Tuple[TopoDS_Shape, OPS]] = []
         self.sort_filter = sort_filter # lambda x: 0 if x[1] == 'fuse' else 1
-    def add(self, shape: TopoDS_Shape, mode: OPS = "fuse"):
-        self.modifiers.append((shape, mode))
+    def add(self, shape: Shape, mode: OPS = "fuse"):
+        self.modifiers.append((shape.obj, mode))
         return self
 
-    def build(self) -> "TopoDS_Shape":
+    def build(self) -> Shape:
         
         sorted_mods = sorted(
             self.modifiers,
@@ -30,4 +30,4 @@ class BooleanBuilder:
                 shape = BRepAlgoAPI_Fuse(shape, mod_shape).Shape()
             elif op == "cut":
                 shape = BRepAlgoAPI_Cut(shape, mod_shape).Shape()
-        return shape
+        return Shape(shape)

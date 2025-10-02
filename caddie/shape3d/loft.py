@@ -1,18 +1,18 @@
 from collections import defaultdict
 from typing import List
 
-from OCC.Core.BRepExtrema import BRepExtrema_DistShapeShape
 from OCC.Core.BRepOffsetAPI import BRepOffsetAPI_ThruSections
 from OCC.Core.BRepTools import breptools
 from OCC.Core.TopAbs import TopAbs_FACE, TopAbs_WIRE
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopoDS import TopoDS_Compound
 
+from caddie.shape3d import Shape
 from caddie.shape3d.boolean import BooleanBuilder
 from caddie.shape3d.section import Section
 
 
-def combine_lists(lists, index=0, path=[]):
+def combine_lists(lists):
     if not lists:
         return [[]]
 
@@ -28,60 +28,6 @@ def combine_lists(lists, index=0, path=[]):
     return result
 
 
-def combine_lists2(other_lists):
-    # TODO: Attempt to link as many faces as possible.
-    # limit to the maximum sublist length
-    # with as few collisions as possible
-
-    combined = []
-    base_list = other_lists[0]
-    other_lists = other_lists[1:]
-    base_len = len(base_list)
-
-    for i, base_item in enumerate(base_list):
-        combined_group = [[base_item]]  # Start with a sublist containing the base item
-
-        for lst in other_lists:
-            lst_len = len(lst)
-
-            if lst_len >= base_len:
-                # Group items from the larger list with the base item
-                chunk_size = lst_len // base_len
-                combined_group.append(lst[i * chunk_size: (i + 1) * chunk_size])
-            else:
-                # Repeat the item from the smaller list for each element in the base list
-                combined_group.append([lst[i % lst_len]])
-
-        combined.append(combined_group)
-
-    return combined
-
-
-def faces_intersect(face1, face2, tolerance=1e-7):
-    """Check if two faces intersect."""
-    dist_shape_shape = BRepExtrema_DistShapeShape(face1, face2)
-    dist_shape_shape.Perform()
-    return dist_shape_shape.Value() < tolerance
-
-
-def group_intersecting_faces(faces):
-    """Group faces that intersect."""
-    # Create an empty graph
-    G = nx.Graph()
-
-    # Add each face as a node in the graph
-    for face in faces:
-        G.add_node(face)
-
-    # Check each pair of faces for intersection
-    for i, face1 in enumerate(faces):
-        for j, face2 in enumerate(faces):
-            if i < j and faces_intersect(face1, face2):
-                G.add_edge(face1, face2)
-
-    # Find connected components (groups of intersecting faces)
-    return list(nx.connected_components(G))
-
 
 class LoftBuilder:
     def __init__(self, ruled: bool = True, solid: bool = True, precision: float = 1e-6):
@@ -94,7 +40,7 @@ class LoftBuilder:
         self.segments.extend(segment)
         return self
 
-    def build(self) -> 'TopoDS_Shape const':
+    def build(self) -> Shape:
         grouped_segments = defaultdict(lambda: ([], []))
 
         for idx, section in enumerate(self.segments):
@@ -160,12 +106,12 @@ class LoftBuilder:
                 outer_shape_built = outer_shape.build()
                 bool_builder.add(outer_shape_built)
                 if inner_w:
-                    inner_shape = self.__build_bb_shape(v[1], outer_shape_built) if v[1] else None
+                    inner_shape = self.__build_bb_shape(v[1]) if v[1] else None
                     if inner_shape is not None and len(inner_shape.modifiers) > 0:
                         bool_builder.add(inner_shape.build(), mode="cut")
         return bool_builder.build()
 
-    def __build_bb_shape(self, wire_segments, contained_in=None):
+    def __build_bb_shape(self, wire_segments):
         wire_segment_paths = combine_lists(wire_segments)
         bb = BooleanBuilder()
         for path in wire_segment_paths:
@@ -174,5 +120,5 @@ class LoftBuilder:
                 for w2 in w:
                     shape.AddWire(w2)
             built_shape = shape.Shape()
-            bb.add(built_shape, "fuse")
+            bb.add(Shape(built_shape), "fuse")
         return bb
