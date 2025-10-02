@@ -10,7 +10,7 @@ from caddie.plane import Plane, ORIGIN, AXIS_Z, AXIS_X
 from caddie.shape2d.shapes import Sketch, Text, MODE
 from caddie.shape2d.sketch import SketchBuilder
 from caddie.shape2d.text import TextBuilder
-from caddie.shape3d import Shape
+from caddie.shape3d import Shape3D
 from caddie.shape3d.section import Section
 from caddie.types.convert_to_gp import to_gp_Ax3
 
@@ -20,7 +20,7 @@ class ExtrusionBuilder:
         self.section = section
         self.tolerance = tolerance
 
-    def build(self, distance: float) -> Shape:
+    def build(self, distance: float) -> Shape3D:
         compound_shape = self.section.build(self.tolerance)
 
         # All 2D shapes are constructed in XY plane, move them into the provided desired plane.
@@ -32,4 +32,4 @@ class ExtrusionBuilder:
             True
         )
 
-        return Shape(prism_maker.Shape())
+        return Shape3D(prism_maker.Shape())

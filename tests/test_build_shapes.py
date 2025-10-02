@@ -1,12 +1,10 @@
 import pathlib
 import unittest
 
-from OCC.Core.TopoDS import TopoDS_Shape
-
 from caddie.ladybug_geometry.geometry2d import Arc2D, Point2D
 from caddie.plane import Plane, Translation, Rotation, AXIS_X
 from caddie.shape2d.shapes import Face, Sketch, MODE, Text
-from caddie.shape3d import Shape
+from caddie.shape3d import Shape3D
 from caddie.shape3d.boolean import BooleanBuilder
 from caddie.shape3d.extrude import ExtrusionBuilder
 from OCC.Extend.DataExchange import write_stl_file
@@ -32,28 +30,28 @@ class TestBasic(unittest.TestCase):
         )
 
     def test_extrude_basic(self):
-        out: Shape = ExtrusionBuilder(
+        out: Shape3D = ExtrusionBuilder(
             Section(Plane(), Sketch(triangle_w_arc_add))
         ).build(1)
         path = f"{self.OUTPUT_PATH}/extrude_basic.stl"
-        write_stl_file(out.obj, path, mode="binary", angular_deflection=0.1)
+        write_stl_file(out.occ_shape, path, mode="binary", angular_deflection=0.1)
         self.assertFileMinSize(path, 1000)  # set threshold you consider “real”
 
     def test_extrude_text(self):
-        out: Shape = ExtrusionBuilder(
+        out: Shape3D = ExtrusionBuilder(
             Section(Plane(), Text("ABC"))
         ).build(1)
         path = f"{self.OUTPUT_PATH}/extrude_text.stl"
-        write_stl_file(out.obj, path, mode="binary", angular_deflection=0.1)
+        write_stl_file(out.occ_shape, path, mode="binary", angular_deflection=0.1)
         self.assertFileMinSize(path, 1000)  # set threshold you consider “real”
 
     def test_bool_3d(self):
         p0 = Plane()
-        out_add: Shape = ExtrusionBuilder(
+        out_add: Shape3D = ExtrusionBuilder(
             Section(p0, Sketch(circle_add))
         ).build(12)
 
-        out_cut: Shape = ExtrusionBuilder(
+        out_cut: Shape3D = ExtrusionBuilder(
             Section(p0, Sketch(triangle_w_arc_add))
         ).build(12)
 
@@ -62,7 +60,7 @@ class TestBasic(unittest.TestCase):
         ).add(out_cut, "cut").build()
 
         path = f"{self.OUTPUT_PATH}/bool_3d.stl"
-        write_stl_file(out.obj, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
+        write_stl_file(out.occ_shape, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
         self.assertFileMinSize(path, 1000)  # set threshold you consider “real”
 
     def test_loft_simple(self):
@@ -94,7 +92,7 @@ class TestBasic(unittest.TestCase):
             )
         ).build()
         path = f"{self.OUTPUT_PATH}/loft_simple.stl"
-        write_stl_file(out.obj, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
+        write_stl_file(out.occ_shape, path, mode="binary", linear_deflection=0.1, angular_deflection=0.1)
 
     def test_loft_complex(self):
         l_0 = ["a", "b", "c"]  # 3 faces
@@ -226,5 +224,5 @@ class TestBasic(unittest.TestCase):
             )
         ).build()
         path = f"{self.OUTPUT_PATH}/loft_complex.stl"
-        write_stl_file(lb.obj, path, mode="binary", linear_deflection=0.5, angular_deflection=0.5)
+        write_stl_file(lb.occ_shape, path, mode="binary", linear_deflection=0.5, angular_deflection=0.5)
         self.assertFileMinSize(path, 1000)

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Union
+from typing import Union, Literal
 from caddie.ladybug_geometry.geometry2d import Point2D, Arc2D, Polyline2D, LineSegment2D, Polygon2D
 
 TYPES = Union[
@@ -37,7 +37,7 @@ class Sketch:
 
 
 class Text:
-    def __init__(self, txt, size: float = 12, h_align: str = '', v_align: str = '', offset: Point2D = Point2D()):
+    def __init__(self, txt, size: float = 12, h_align: Literal['CENTERED', 'LEFT', 'RIGHT', 'RIGHT_MARGIN'] = 'CENTERED', v_align: Literal['CENTERED', 'BOTTOM', 'TOP'] = 'CENTERED', offset: Point2D = Point2D()):
         self.txt = txt
         self.size = size
         self.h_align = h_align

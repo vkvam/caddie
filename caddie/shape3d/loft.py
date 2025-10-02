@@ -7,7 +7,7 @@ from OCC.Core.TopAbs import TopAbs_FACE, TopAbs_WIRE
 from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopoDS import TopoDS_Compound
 
-from caddie.shape3d import Shape
+from caddie.shape3d import Shape3D
 from caddie.shape3d.boolean import BooleanBuilder
 from caddie.shape3d.section import Section
 
@@ -40,7 +40,7 @@ class LoftBuilder:
         self.segments.extend(segment)
         return self
 
-    def build(self) -> Shape:
+    def build(self) -> Shape3D:
         grouped_segments = defaultdict(lambda: ([], []))
 
         for idx, section in enumerate(self.segments):
@@ -120,5 +120,5 @@ class LoftBuilder:
                 for w2 in w:
                     shape.AddWire(w2)
             built_shape = shape.Shape()
-            bb.add(Shape(built_shape), "fuse")
+            bb.add(Shape3D(built_shape), "fuse")
         return bb
