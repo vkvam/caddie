@@ -1,7 +1,10 @@
 import dataclasses
+from typing import TYPE_CHECKING
 
-from OCC.Core.Bnd import Bnd_Box
 from caddie.ladybug_geometry.geometry3d import Point3D
+
+if TYPE_CHECKING:
+    from OCC.Core.Bnd import Bnd_Box
 
 
 @dataclasses.dataclass
@@ -12,7 +15,7 @@ class BoundingBox:
         self.size = self.__p_max - self.__p_min
 
     @classmethod
-    def from_bnd_box(cls, bb: Bnd_Box):
+    def from_bnd_box(cls, bb: 'Bnd_Box'):
         xmin, ymin, zmin, xmax, ymax, zmax = bb.Get()
         return cls(
             Point3D(
@@ -58,8 +61,10 @@ class BoundingBox:
         return self.__p_max
 
     def center(self):
-        d = (self.__p_min + self.__p_max) * 0.5
-        return Point3D(*d.to_array())
+        min_coords = self.__p_min.as_tuple()
+        max_coords = self.__p_max.as_tuple()
+        center_coords = tuple((mi + ma) * 0.5 for mi, ma in zip(min_coords, max_coords))
+        return Point3D(*center_coords)
 
     def __hash__(self):
         return hash(
