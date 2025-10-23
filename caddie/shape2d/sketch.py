@@ -38,7 +38,7 @@ class SketchBuilder(Shape2DBuilder):
     def __init__(self, sketch: Sketch, tolerance: float = TOL):
         super().__init__()
         self.tolerance = tolerance
-        cache_key = hash(sketch)
+        cache_key = (hash(sketch), tolerance)
         if cache_key in SketchBuilder.cache:
             self.shape2d = SketchBuilder.cache[cache_key]
         else:
